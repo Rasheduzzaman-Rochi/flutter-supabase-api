@@ -1,4 +1,7 @@
+import 'dart:math';
+import 'package:employee_api/models/employee_model.dart';
 import 'package:flutter/material.dart';
+import '../services/supabase_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +17,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final _ageController = TextEditingController();
   final _salaryController = TextEditingController();
 
-  Future<void> addEmployee() async {}
+  Future<void> addEmployee() async {
+    final employee = Employee(
+      id: Random().nextInt(20).toInt(),
+      name: _nameController.text,
+      age: int.parse(_ageController.text),
+      salary: double.parse(_salaryController.text),
+    );
+
+    await SupabaseProvider.client.from('employees').insert(employee.toMap());
+  }
 
   @override
   Widget build(BuildContext context) {
