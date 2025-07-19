@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:employee_api/models/employee_model.dart';
 import 'package:flutter/material.dart';
 import '../services/supabase_provider.dart';
@@ -19,13 +18,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> addEmployee() async {
     final employee = Employee(
-      id: Random().nextInt(20).toInt(),
       name: _nameController.text,
       age: int.parse(_ageController.text),
       salary: double.parse(_salaryController.text),
     );
 
-    await SupabaseProvider.client.from('employees').insert(employee.toMap());
+    try {
+      final response = await SupabaseProvider.client
+          .from('Employee')
+          .insert(employee.toMap());
+
+      if (response == null ||
+          response.error != null ||
+          response.data == null ||
+          response.data.isEmpty) {
+        return;
+      }
+    } catch (e) {}
   }
 
   @override
@@ -73,9 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     addEmployee();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Employee added successfully')),
-                    );
                     _nameController.clear();
                     _ageController.clear();
                     _salaryController.clear();
