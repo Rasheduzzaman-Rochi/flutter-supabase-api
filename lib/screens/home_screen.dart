@@ -10,11 +10,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<Map<String, dynamic>> _employees = [
-
-  ];
+  late List<Map<String, dynamic>> _employees = [];
 
   Future<void> fetchEmployee() async {
+    final response = await SupabaseProvider.client
+        .from('Employee')
+        .select()
+        .order('id', ascending: true);
+
+    for (var i in response as List) {
+      final data = Employee.fromMap(i);
+
+      _employees.add({
+        'name': data.name,
+        'age': data.age,
+        'salary': data.salary,
+      });
+    }
   }
 
   @override
@@ -31,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
                 itemCount: _employees.length,
