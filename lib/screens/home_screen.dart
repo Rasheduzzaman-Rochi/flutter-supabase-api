@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final employee = Employee(
       name: _nameController.text,
       age: int.parse(_ageController.text),
-      salary: double.parse(_salaryController.text),
+      salary: int.parse(_salaryController.text),
     );
 
     try {

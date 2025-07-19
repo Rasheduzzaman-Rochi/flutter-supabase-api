@@ -2,7 +2,7 @@ class Employee {
   final int? id;
   final String name;
   final int age;
-  final double salary;
+  final int salary;
 
   Employee({
     this.id,
