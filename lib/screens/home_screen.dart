@@ -27,9 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'salary': data.salary,
       });
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
