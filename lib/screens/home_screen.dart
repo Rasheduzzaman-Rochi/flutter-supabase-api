@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .order('id', ascending: true);
 
     for (var i in response as List) {
-      final data = Employee.fromMap(i);
+      final data = Employee.fromJson(i);
 
       _employees.add({
         'name': data.name,

@@ -11,20 +11,23 @@ class Employee {
     required this.salary,
   });
 
-  Map<String, dynamic> toMap() {
+  // Convert Employee object to JSON
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'age': age,
       'salary': salary,
     };
   }
 
-  factory Employee.fromMap(Map<String, dynamic> map) {
+  // Create an Employee object from JSON
+  factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-      id: map['id'],
-      name: map['name'],
-      age: map['age'],
-      salary: map['salary'],
+      id: json['id'],
+      name: json['name'],
+      age: json['age'],
+      salary: json['salary'],
     );
   }
 }
