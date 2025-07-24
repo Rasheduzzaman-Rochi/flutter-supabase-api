@@ -31,6 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+Future<void> deleteEmployee(int id) async {
+    final response = await SupabaseProvider.client
+        .from('Employee')
+        .delete()
+        .eq('id', id);
+
+    if (response.error == null) {
+      _employees.removeWhere((employee) => employee['id'] == id);
+      setState(() {});
+    } else {
+      print('Error deleting employee: ${response.error!.message}');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () {
-                        // delete(_employees[index]['id']);
+                        deleteEmployee(_employees[index]['id']);
                       },
                     ),
                   );
