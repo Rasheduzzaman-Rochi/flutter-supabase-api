@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final data = Employee.fromJson(i);
 
       _employees.add({
+        'id': data.id,
         'name': data.name,
         'age': data.age,
         'salary': data.salary,
