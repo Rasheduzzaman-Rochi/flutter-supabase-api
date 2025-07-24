@@ -76,10 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   validator: (value) => value!.isEmpty ? 'Enter salary' : null,
                   keyboardType: TextInputType.number,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
-
+                    if (_formKey.currentState!.validate()) {
+                      final name = _nameController.text;
+                      final age = int.parse(_ageController.text);
+                      final salary = int.parse(_salaryController.text);
+                      updateEmployee(selectEmployeeId!, name, age, salary);
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: const Text('Submit'),
                 ),
@@ -117,7 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () {},
+                      onPressed: () {
+                        openEditDialog(_employees[index]['id']);
+                      },
                     ),
                   );
                 },
