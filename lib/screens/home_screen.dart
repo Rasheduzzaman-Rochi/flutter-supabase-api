@@ -10,31 +10,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<Map<String, dynamic>> _employees = [];
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> fetchEmployee() async {
-    final response = await SupabaseProvider.client
-        .from('Employee')
-        .select()
-        .order('id', ascending: true);
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _salaryController = TextEditingController();
 
-    for (var i in response as List) {
-      final data = Employee.fromJson(i);
+  Future<void> addEmployee() async {
+    final employee = Employee(
+      name: _nameController.text,
+      age: int.parse(_ageController.text),
+      salary: int.parse(_salaryController.text),
+    );
 
-      _employees.add({
-        'id': data.id,
-        'name': data.name,
-        'age': data.age,
-        'salary': data.salary,
-      });
-    }
-    setState(() {});
-  }
+    try {
+      final response = await SupabaseProvider.client
+          .from('Employee')
+          .insert(employee.toMap());
 
-  @override
-  void initState() {
-    super.initState();
-    fetchEmployee();
+      if (response == null ||
+          response.error != null ||
+          response.data == null ||
+          response.data.isEmpty) {
+        return;
+      }
+    } catch (e) {}
   }
 
   @override
@@ -43,25 +43,64 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: Text('Add Employee')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _employees.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_employees[index]['name']),
-                    subtitle: Text(
-                      'Age: ${_employees[index]['age']}, Salary: ${_employees[index]['salary']}',
-                    ),
-                  );
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a name';
+                  }
+                  return null;
                 },
               ),
-            ),
-          ],
+              TextFormField(
+                controller: _ageController,
+                decoration: InputDecoration(labelText: 'Age'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an age';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _salaryController,
+                decoration: InputDecoration(labelText: 'Salary'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a salary';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    addEmployee();
+                    _nameController.clear();
+                    _ageController.clear();
+                    _salaryController.clear();
+                  }
+                },
+                child: Text('Add Employee'),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _salaryController.dispose();
+    super.dispose();
   }
 }
