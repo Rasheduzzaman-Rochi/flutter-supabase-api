@@ -11,4 +11,3 @@ class SupabaseProvider {
 
   static SupabaseClient get client => Supabase.instance.client;
 }
-
