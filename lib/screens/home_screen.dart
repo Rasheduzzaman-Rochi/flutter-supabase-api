@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<Map<String, dynamic>> _employees = [];
+  late final List<Map<String, dynamic>> _employees = [];
 
   Future<void> fetchEmployee() async {
     final response = await SupabaseProvider.client
