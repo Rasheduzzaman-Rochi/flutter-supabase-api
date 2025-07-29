@@ -11,6 +11,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   signUp() async {}
 
   @override
@@ -23,26 +25,32 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              keyboardType: TextInputType.visiblePassword,
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () {
-                signUp();
-              },
-              child: Text('Sign Up'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: (value) => value?.isEmpty ?? true ? 'Name is required' : null,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password'),
+                validator: (value) => (value?.length ?? 0) < 6 ? 'Password must be at least 6 characters' : null,
+                keyboardType: TextInputType.visiblePassword,
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () {
+                  signUp();
+                },
+                child: Text('Sign Up'),
+              ),
+            ],
+          ),
         ),
       ),
     );
