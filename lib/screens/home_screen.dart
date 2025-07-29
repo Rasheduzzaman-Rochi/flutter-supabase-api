@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final response = await SupabaseProvider.client
           .from('Employee')
-          .insert(employee.toMap());
+          .insert(employee.toJson());
 
       if (response == null ||
           response.error != null ||
