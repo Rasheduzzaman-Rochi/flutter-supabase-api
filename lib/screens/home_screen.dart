@@ -1,4 +1,6 @@
+import 'package:employee_api/services/supabase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +15,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  signUp() async {}
+  Future<void> signUp() async {
+    try {
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      final response = await SupabaseProvider.client.auth.signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (response.user != null) {
+        Get.showSnackbar(
+          GetSnackBar(
+            message: ' ',
+            title: 'Sign Up Successful',
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error during sign up: $e');
+      Get.showSnackbar(
+        GetSnackBar(
+          message: 'fail',
+          title: e.toString(),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +61,22 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) => value?.isEmpty ?? true ? 'Name is required' : null,
+                validator: (value) =>
+                    value?.isEmpty ?? true ? 'Name is required' : null,
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) => (value?.length ?? 0) < 6 ? 'Password must be at least 6 characters' : null,
-                keyboardType: TextInputType.visiblePassword,
+                validator: (value) => (value?.length ?? 0) < 6
+                    ? 'Password must be at least 6 characters'
+                    : null,
+                obscureText: true,
               ),
               const SizedBox(height: 8),
               ElevatedButton(
