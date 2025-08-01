@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Employee {
   final int? id;
   final String name;
@@ -11,20 +13,24 @@ class Employee {
     required this.salary,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
+  // Converts Employee instance to a JSON string
+  String toJson() {
+    final data = {
+      'id': id,
       'name': name,
       'age': age,
       'salary': salary,
     };
+    return json.encode(data);
   }
 
-  factory Employee.fromMap(Map<String, dynamic> map) {
+  // Converts JSON string to Employee instance
+  factory Employee.fromJson(Map<String, dynamic> data) {
     return Employee(
-      id: map['id'],
-      name: map['name'],
-      age: map['age'],
-      salary: map['salary'],
+      id: data['id'],
+      name: data['name'],
+      age: data['age'],
+      salary: data['salary'],
     );
   }
 }
