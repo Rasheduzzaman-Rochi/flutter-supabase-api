@@ -1,6 +1,4 @@
-import 'package:employee_api/models/employee_model.dart';
 import 'package:flutter/material.dart';
-import '../services/supabase_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,97 +8,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  final _nameController = TextEditingController();
-  final _ageController = TextEditingController();
-  final _salaryController = TextEditingController();
-
-  Future<void> addEmployee() async {
-    final employee = Employee(
-      name: _nameController.text,
-      age: int.parse(_ageController.text),
-      salary: int.parse(_salaryController.text),
-    );
-
-    try {
-      final response = await SupabaseProvider.client
-          .from('Employee')
-          .insert(employee.toJson());
-
-      if (response == null ||
-          response.error != null ||
-          response.data == null ||
-          response.data.isEmpty) {
-        return;
-      }
-    } catch (e) {}
-  }
+  signUp() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Employee')),
+      appBar: AppBar(
+        backgroundColor: Colors.yellow,
+        title: Text('Sign Up'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _ageController,
-                decoration: InputDecoration(labelText: 'Age'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an age';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _salaryController,
-                decoration: InputDecoration(labelText: 'Salary'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a salary';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    addEmployee();
-                    _nameController.clear();
-                    _ageController.clear();
-                    _salaryController.clear();
-                  }
-                },
-                child: Text('Add Employee'),
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              keyboardType: TextInputType.visiblePassword,
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                signUp();
+              },
+              child: Text('Sign Up'),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _ageController.dispose();
-    _salaryController.dispose();
-    super.dispose();
   }
 }
