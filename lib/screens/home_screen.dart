@@ -12,16 +12,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> signUp() async {
+  Future<void> signIn() async {
     try {
       if (!_formKey.currentState!.validate()) {
         return;
       }
 
-      final response = await SupabaseProvider.client.auth.signUp(
+      final response = await SupabaseProvider.client.auth.signInWithPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -30,14 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
         Get.showSnackbar(
           GetSnackBar(
             message: ' ',
-            title: 'Sign Up Successful',
+            title: 'Sign In Successful',
             duration: Duration(seconds: 2),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
-      print('Error during sign up: $e');
+      print('Error during sign In: $e');
       Get.showSnackbar(
         GetSnackBar(
           message: 'fail',
@@ -54,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.yellow,
-        title: Text('Sign Up'),
+        title: Text('Sign In'),
         centerTitle: true,
       ),
       body: Padding(
@@ -81,9 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  signUp();
+                  signIn();
                 },
-                child: Text('Sign Up'),
+                child: Text('Sign In'),
               ),
             ],
           ),
