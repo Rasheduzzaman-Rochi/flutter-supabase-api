@@ -12,14 +12,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Future<void> signIn() async {
-    final response = SupabaseProvider.client.auth.currentSession;
+  @override
+  void initState() {
+    super.initState();
+    _signIn();
+  }
 
-    if (response != null) {
-      Get.to(HomeScreen());
-    } else {
-      Get.to(SignInScreen());
-    }
+  Future<void> _signIn() async {
+    final response = SupabaseProvider.client.auth.currentSession;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (response != null) {
+        Get.to(HomeScreen());
+      } else {
+        Get.to(SignInScreen());
+      }
+    });
   }
 
   @override
@@ -30,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         title: Text('Sign In'),
         centerTitle: true,
       ),
+      body: Center(child: CircularProgressIndicator(color: Colors.grey)),
     );
   }
 }

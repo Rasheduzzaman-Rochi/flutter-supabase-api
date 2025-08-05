@@ -1,4 +1,4 @@
-import 'package:employee_api/screens/signIn_screen.dart';
+import 'package:employee_api/screens/splash_screen.dart';
 import 'package:employee_api/services/supabase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInScreen(),
+      home: SplashScreen(),
     );
   }
 }
